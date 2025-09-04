@@ -1,10 +1,12 @@
-from fastapi import APIRouter
-from app.schemas.ocr_schema import OCRRequest, OCRResponse
-from app.services.ocr_service import extract_text_from_image
+from fastapi import APIRouter, UploadFile, File
+from app.schemas.ocr_schema import OCRResponse
+from app.services.ocr_service import extract_text_from_image_bytes
 
 router = APIRouter()
 
 @router.post("/ocr", response_model=OCRResponse)
-def run_ocr(request: OCRRequest):
-    text = extract_text_from_image(request.image_path)
+async def run_ocr(file: UploadFile = File(...)):
+    # Read the uploaded file bytes
+    file_bytes = await file.read()
+    text = extract_text_from_image_bytes(file_bytes)
     return OCRResponse(extracted_text=text)

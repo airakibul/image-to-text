@@ -1,8 +1,9 @@
 from app.config import client
-from app.utils.image_utils import encode_image_to_base64
+import base64
 
-def extract_text_from_image(image_path: str) -> str:
-    image_base64 = encode_image_to_base64(image_path)
+def extract_text_from_image_bytes(file_bytes: bytes) -> str:
+    # Encode the image to base64
+    image_base64 = base64.b64encode(file_bytes).decode("utf-8")
 
     response = client.responses.create(
         model="gpt-4o-mini",
